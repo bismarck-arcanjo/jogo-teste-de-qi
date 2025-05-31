@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teste de QI Moderno</title>
+<style>
+  /* Reset e base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 600px;
+    padding: 25px 30px 35px;
+    text-align: center;
+    position: relative;
+  }
+  h2, h3 {
+    margin-bottom: 20px;
+    color: #5a4d9d;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #5a4d9d;
+  }
+  input[type="text"], select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1.8px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, select:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+  #avatar-preview {
+    margin: 15px auto 25px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+    display: block;
+    box-shadow: 0 0 8px #667eea;
+  }
+  #mode-select {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  #mode-select button {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    border-radius: 12px;
+    background: #b3aef7;
+    color: #4b4276;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    box-shadow: 0 3px 6px rgba(102,126,234,0.5);
+  }
+  #mode-select button.active,
+  #mode-select button:hover {
+    background: #5c4dbc;
+    color: white;
+    box-shadow: 0 6px 15px rgba(92,77,188,0.7);
+  }
+  button.action-btn {
+    background: #5c4dbc;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 15px 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 12px rgba(92,77,188,0.8);
+    transition: background 0.3s ease;
+    margin: 5px;
+  }
+  button.action-btn:hover:not(:disabled) {
+    background: #46368a;
+  }
+  button:disabled {
+    background: #9c9acb;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  #quiz, #end-screen, #ranking {
+    display: none;
+  }
+  .visible {
+    display: block !important;
+  }
+  .hidden {
+    display: none !important;
+  }
+  #question {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #423a75;
+  }
+  #answers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  #answers button {
+    background: #eee;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1 1 45%;
+    min-width: 140px;
+    transition: background 0.25s ease;
+  }
+  #answers button:hover:not(:disabled) {
+    background: #d2cefa;
+  }
+  #answers button:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+  #feedback {
+    min-height: 30px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+  #feedback.correct {
+    color: #4caf50;
+  }
+  #feedback.wrong {
+    color: #f44336;
+  }
+  #achievements {
+    font-size: 1rem;
+    font-style: italic;
+    color: #ffa726;
+    margin-bottom: 20px;
+    min-height: 24px;
+  }
+  #progress-bar-container {
+    height: 14px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  #progress {
+    height: 100%;
+    width: 100%;
+    background: #6c63ff;
+    transition: width 0.4s ease;
+  }
+  #timer-container {
+    position: relative;
+    margin: 0 auto 30px;
+    width: 130px;
+    height: 130px;
+  }
+  svg {
+    transform: rotate(-90deg);
+    width: 130px;
+    height: 130px;
+  }
+  #timer-progress {
+    stroke: #6c63ff;
+    stroke-width: 12;
+    fill: transparent;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+  }
+  #timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #6c63ff;
+  }
+  #badges {
+    margin-top: 20px;
+  }
+  .badge {
+    background: #ff7043;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 25px;
+    margin: 6px 8px 0 0;
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(255,112,67,0.6);
+  }
+  #ranking-list {
+    text-align: left;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 0;
+    list-style: none;
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+  }
+  #ranking-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #444;
+  }
+  #ranking-list img {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+  }
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    border-radius: 50%;
+    animation: confetti-fall 1.2s linear forwards;
+    pointer-events: none;
+    filter: drop-shadow(0 0 2px #fff);
+  }
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.9;}
+    100% { transform: translateY(120px) rotate(360deg); opacity: 0;}
+  }
+
+  /* Responsividade */
+  @media (max-width: 480px) {
+    #answers button {
+      flex: 1 1 100%;
+      min-width: unset;
+    }
+    .container {
+      margin: 20px;
+      padding: 20px 18px 30px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container">
+
+    <!-- Tela Inicial -->
+    <section id="start-screen" class="visible" aria-label="Tela inicial">
+      <h2>Teste de QI - Personalize e Escolha o modo</h2>
+      <label for="player-name">Seu nome:</label>
+      <input type="text" id="player-name" placeholder="Digite seu nome" autocomplete="off" />
+
+      <label for="avatar-select">Escolha um avatar:</label>
+      <select id="avatar-select" aria-label="Seleção de avatar">
+        <option value="https://i.pravatar.cc/80?img=1">Avatar 1</option>
+        <option value="https://i.pravatar.cc/80?img=2">Avatar 2</option>
+        <option value="https://i.pravatar.cc/80?img=3">Avatar 3</option>
+        <option value="https://i.pravatar.cc/80?img=4">Avatar 4</option>
+      </select>
+      <img id="avatar-preview" src="https://i.pravatar.cc/80?img=1" alt="Avatar selecionado" />
+
+      <div id="mode-select" role="radiogroup" aria-label="Seleção de modo">
+        <button class="active" data-mode="normal" role="radio" aria-checked="true" tabindex="0">Modo Normal</button>
+        <button data-mode="maratona" role="radio" aria-checked="false" tabindex="-1">Modo Maratona</button>
+      </div>
+
+      <button id="start-btn" class="action-btn" aria-label="Iniciar teste">Começar</button>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" aria-live="polite">
+      <div id="timer-container" aria-label="Cronômetro">
+        <svg>
+          <circle cx="65" cy="65" r="45" stroke="#ddd" stroke-width="12" fill="none"></circle>
+          <circle id="timer-progress" cx="65" cy="65" r="45"></circle>
+        </svg>
+        <div id="timer-text">10</div>
+      </div>
+
+      <div id="progress-bar-container" aria-label="Barra de progresso">
+        <div id="progress"></div>
+      </div>
+
+      <div id="question" role="heading" aria-level="3"></div>
+      <div id="answers"></div>
+      <div id="feedback" aria-live="assertive"></div>
+      <div id="achievements"></div>
+    </section>
+
+    <!-- Tela final -->
+    <section id="end-screen" aria-label="Resultados do teste">
+      <h3>Resultado de <span id="final-name"></span></h3>
+      <img id="final-avatar" alt="Avatar do jogador" />
+      <p id="result"></p>
+      <div id="badges" aria-label="Badges"></div>
+      <button id="retry-btn" class="action-btn" aria-label="Reiniciar teste">Jogar Novamente</button>
+      <button id="share-btn" class="action-btn" aria-label="Compartilhar no Twitter">Compartilhar no Twitter</button>
+    </section>
+
+    <!-- Ranking -->
+    <section id="ranking" aria-label="Ranking dos jogadores">
+      <h3>Ranking Top 10</h3>
+      <ol id="ranking-list"></ol>
+    </section>
+
+    <!-- Sons (usando beeps simples) -->
+  </main>
+
+<script>
+(() => {
+  const perguntas = [
+    {
+      pergunta: "Qual o próximo número na sequência? 2, 4, 8, 16, ?",
+      respostas: ["18", "24", "32", "30"],
+      correta: 2
+    },
+    {
+      pergunta: "Se todos os bloops são razzies e todos os razzies são lazzies, então todos os bloops são definitivamente lazzies?",
+      respostas: ["Sim", "Não", "Talvez", "Não sei"],
+      correta: 0
+    },
+    {
+      pergunta: "Qual figura completa a sequência? (Imagine figura sequencial)",
+      respostas: ["Círculo", "Quadrado", "Triângulo", "Retângulo"],
+      correta: 1
+    },
+    {
+      pergunta: "Quantos triângulos existem nesta figura?",
+      respostas: ["10", "12", "15", "9"],
+      correta: 1
+    },
+    {
+      pergunta: "Qual a palavra que não pertence ao grupo?",
+      respostas: ["Maçã", "Banana", "Tomate", "Pera"],
+      correta: 2
+    },
+    {
+      pergunta: "Complete a sequência: 1, 1, 2, 3, 5, 8, ?",
+      respostas: ["11", "13", "15", "10"],
+      correta: 1
+    },
+    {
+      pergunta: "Se 5 máquinas fazem 5 produtos em 5 minutos, quantas máquinas são necessárias para fazer 100 produtos em 100 minutos?",
+      respostas: ["5", "20", "100", "10"],
+      correta: 0
+    },
+    {
+      pergunta: "Qual número vem depois na sequência? 144, 121, 100, 81, ?",
+      respostas: ["64", "70", "49", "60"],
+      correta: 0
+    },
+    {
+      pergunta: "Ana é mais alta que Bruno. Carlos é mais baixo que Bruno. Quem é o mais alto?",
+      respostas: ["Ana", "Bruno", "Carlos", "Impossível saber"],
+      correta: 0
+    },
+    {
+      pergunta: "Qual é o próximo na sequência? A, D, G, J, ?",
+      respostas: ["K", "L", "M", "N"],
+      correta: 2
+    },
+    {
+      pergunta: "Se ontem foi dois dias antes de segunda-feira, que dia é hoje?",
+      respostas: ["Domingo", "Segunda", "Terça", "Sábado"],
+      correta: 0
+    },
+    {
+      pergunta: "Complete a analogia: LIVRO está para PÁGINA assim como CASA está para:",
+      respostas: ["Tijolo", "Quarto", "Telhado", "Porta"],
+      correta: 1
+    },
+    {
+      pergunta: "Qual número não pertence ao grupo? 2, 3, 6, 7, 8, 14, 15, 30",
+      respostas: ["8", "6", "14", "30"],
+      correta: 0
+    },
+    {
+      pergunta: "Se você reorganizar as letras de OCEAN, qual destas palavras pode formar?",
+      respostas: ["CANOE", "CRANE", "ACORN", "BACON"],
+      correta: 0
+    },
+    {
+      pergunta: "Numa sala há 4 gatos. Cada gato vê 3 gatos. Quantos gatos há na sala?",
+      respostas: ["4", "7", "12", "16"],
+      correta: 0
+    },
+    {
+      pergunta: "Complete: 7, 14, 28, 56, ?",
+      respostas: ["84", "112", "98", "104"],
+      correta: 1
+    },
+    {
+      pergunta: "Qual é o antônimo de ABUNDANTE?",
+      respostas: ["Escasso", "Pequeno", "Raro", "Limitado"],
+      correta: 0
+    },
+    {
+      pergunta: "Se A=1, B=2, C=3... qual é o valor da palavra CAB?",
+      respostas: ["6", "8", "5", "7"],
+      correta: 0
+    },
+    {
+      pergunta: "Qual padrão segue a sequência? 1, 4, 9, 16, 25, ?",
+      respostas: ["30", "36", "35", "49"],
+      correta: 1
+    },
+    {
+      pergunta: "Se João tem o dobro da idade de Maria, e Maria tem 15 anos, quantos anos João terá daqui a 5 anos?",
+      respostas: ["35", "40", "30", "25"],
+      correta: 0
+    }
+  ];
+
+  // Elementos
+  const elements = {
+    startScreen: document.getElementById('start-screen'),
+    quiz: document.getElementById('quiz'),
+    endScreen: document.getElementById('end-screen'),
+    ranking: document.getElementById('ranking'),
+
+    playerNameInput: document.getElementById('player-name'),
+    avatarSelect: document.getElementById('avatar-select'),
+    avatarPreview: document.getElementById('avatar-preview'),
+
+    modeButtons: document.querySelectorAll('#mode-select button'),
+
+    startBtn: document.getElementById('start-btn'),
+    retryBtn: document.getElementById('retry-btn'),
+    shareBtn: document.getElementById('share-btn'),
+
+    timerContainer: document.getElementById('timer-container'),
+    timerText: document.getElementById('timer-text'),
+    timerProgress: document.getElementById('timer-progress'),
+
+    progressBar: document.getElementById('progress'),
+    questionText: document.getElementById('question'),
+    answersContainer: document.getElementById('answers'),
+
+    feedback: document.getElementById('feedback'),
+    achievements: document.getElementById('achievements'),
+    badges: document.getElementById('badges'),
+
+    finalName: document.getElementById('final-name'),
+    finalAvatar: document.getElementById('final-avatar'),
+    result: document.getElementById('result'),
+
+    rankingList: document.getElementById('ranking-list')
+  };
+
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let timerInterval = null;
+  let timeLeft = 10;
+  const timerDuration = 10;
+  let mode = 'normal';
+  let gameData = {}; // Armazenamento em memória
+
+  // Sons usando Web Audio API
+  const playSound = (frequency, duration = 200) => {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration / 1000);
+    } catch (e) {
+      console.log('Som não disponível');
+    }
+  };
+
+  const sounds = {
+    correct: () => playSound(523.25, 300), // C5
+    wrong: () => playSound(207.65, 400),   // G#3
+    alert: () => playSound(880, 150)       // A5
+  };
+
+  // Atualiza preview do avatar
+  elements.avatarSelect.addEventListener('change', e => {
+    elements.avatarPreview.src = e.target.value;
+  });
+
+  // Mudar modo
+  elements.modeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      mode = button.dataset.mode;
+      elements.modeButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-checked', 'false');
+        btn.tabIndex = -1;
+      });
+      button.classList.add('active');
+      button.setAttribute('aria-checked', 'true');
+      button.tabIndex = 0;
+      updateTimerVisibility();
+    });
+  });
+
+  // Controla visibilidade do timer conforme modo
+  const updateTimerVisibility = () => {
+    if (mode === 'normal') {
+      elements.timerContainer.style.display = 'block';
+    } else {
+      elements.timerContainer.style.display = 'none';
+      clearInterval(timerInterval);
+    }
+  };
+
+  // Iniciar jogo
+  elements.startBtn.addEventListener('click', () => {
+    if (!elements.playerNameInput.value.trim()) {
+      alert('Por favor, digite seu nome.');
+      return;
+    }
+    startGame();
+  });
+
+  // Reiniciar jogo
+  elements.retryBtn.addEventListener('click', () => {
+    resetGame();
+  });
+
+  // Compartilhar no Twitter
+  elements.shareBtn.addEventListener('click', () => {
+    const text = encodeURIComponent(`Meu resultado no Teste de QI foi ${score} de ${perguntas.length}! Teste você também!`);
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  });
+
+  // Inicia a lógica do jogo
+  function startGame() {
+    showScreen('quiz');
+    currentQuestionIndex = 0;
+    score = 0;
+    elements.feedback.textContent = '';
+    elements.achievements.textContent = '';
+
+    loadQuestion();
+    updateProgress();
+    updateTimerVisibility();
+
+    if (mode === 'normal') startTimer();
+  }
+
+  // Função para gerenciar telas
+  function showScreen(screenName) {
+    const screens = ['start-screen', 'quiz', 'end-screen', 'ranking'];
+    screens.forEach(screen => {
+      const element = document.getElementById(screen);
+      if (screen === screenName) {
+        element.classList.add('visible');
+        element.classList.remove('hidden');
+      } else {
+        element.classList.remove('visible');
+        element.classList.add('hidden');
+      }
+    });
+  }
+
+  // Carregar pergunta atual
+  function loadQuestion() {
+    clearInterval(timerInterval);
+    elements.feedback.textContent = '';
+    elements.achievements.textContent = '';
+    elements.answersContainer.innerHTML = '';
+
+    const q = perguntas[currentQuestionIndex];
+    elements.questionText.textContent = q.pergunta;
+
+    q.respostas.forEach((res, idx) => {
+      const btn = document.createElement('button');
+      btn.textContent = res;
+      btn.disabled = false;
+      btn.addEventListener('click', () => checkAnswer(idx));
+      elements.answersContainer.appendChild(btn);
+    });
+
+    timeLeft = timerDuration;
+    updateTimerText();
+    updateTimerProgress(0);
+
+    if (mode === 'normal') startTimer();
+  }
+
+  // Atualiza barra de progresso
+  function updateProgress() {
+    const progressPercent = ((currentQuestionIndex) / perguntas.length) * 100;
+    elements.progressBar.style.width = progressPercent + '%';
+  }
+
+  // Verifica resposta do jogador
+  function checkAnswer(selected) {
+    clearInterval(timerInterval);
+    const correctIndex = perguntas[currentQuestionIndex].correta;
+
+    elements.feedback.classList.remove('correct', 'wrong');
+
+    if (selected === correctIndex) {
+      score++;
+      elements.feedback.textContent = "Resposta correta!";
+      elements.feedback.classList.add('correct');
+      sounds.correct();
+      showConfetti();
+      showAchievements();
+    } else {
+      elements.feedback.textContent = "Resposta incorreta.";
+      elements.feedback.classList.add('wrong');
+      sounds.wrong();
+    }
+
+    Array.from(elements.answersContainer.children).forEach(btn => btn.disabled = true);
+
+    setTimeout(nextQuestion, 1500);
+  }
+
+  // Próxima pergunta ou finaliza o jogo
+  function nextQuestion() {
+    currentQuestionIndex++;
+    updateProgress();
+    
+    if (currentQuestionIndex >= perguntas.length) {
+      finishGame();
+    } else {
+      loadQuestion();
+    }
+  }
+
+  // Finaliza e mostra resultados
+  function finishGame() {
+    showScreen('end-screen');
+    
+    // Mostra ranking também
+    elements.ranking.classList.add('visible');
+    elements.ranking.classList.remove('hidden');
+
+    elements.finalName.textContent = elements.playerNameInput.value;
+    elements.finalAvatar.src = elements.avatarSelect.value;
+    elements.finalAvatar.alt = `Avatar de ${elements.playerNameInput.value}`;
+
+    let resultMsg = `Você acertou ${score} de ${perguntas.length} perguntas. `;
+    if (score === perguntas.length) resultMsg += "Parabéns, você é um gênio!";
+    else if (score >= perguntas.length * 0.7) resultMsg += "Muito bom!";
+    else resultMsg += "Continue praticando!";
+
+    elements.result.textContent = resultMsg;
+
+    displayBadges();
+    saveRanking();
+    showRanking();
+  }
+
+  // Resetar para tela inicial
+  function resetGame() {
+    showScreen('start-screen');
+
+    elements.playerNameInput.value = '';
+    elements.avatarSelect.value = 'https://i.pravatar.cc/80?img=1';
+    elements.avatarPreview.src = elements.avatarSelect.value;
+
+    elements.feedback.textContent = '';
+    elements.achievements.textContent = '';
+    elements.answersContainer.innerHTML = '';
+    elements.questionText.textContent = '';
+    elements.progressBar.style.width = '0%';
+
+    // Reset mode selection
+    elements.modeButtons.forEach(btn => {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-checked', 'false');
+      btn.tabIndex = -1;
+    });
+    elements.modeButtons[0].classList.add('active');
+    elements.modeButtons[0].setAttribute('aria-checked', 'true');
+    elements.modeButtons[0].tabIndex = 0;
+    mode = 'normal';
+
+    clearInterval(timerInterval);
+    updateTimerVisibility();
+  }
+
+  // Timer do modo normal
+  function startTimer() {
+    clearInterval(timerInterval);
+    timeLeft = timerDuration;
+    updateTimerText();
+    updateTimerProgress(0);
+
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimerText();
+      updateTimerProgress((timerDuration - timeLeft) / timerDuration);
+
+      if (timeLeft <= 3 && timeLeft > 0) sounds.alert();
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        elements.feedback.textContent = "Tempo esgotado!";
+        elements.feedback.classList.remove('correct');
+        elements.feedback.classList.add('wrong');
+        Array.from(elements.answersContainer.children).forEach(btn => btn.disabled = true);
+        sounds.wrong();
+        setTimeout(nextQuestion, 1500);
+      }
+    }, 1000);
+  }
+
+  // Atualiza texto do timer circular
+  function updateTimerText() {
+    elements.timerText.textContent = timeLeft;
+  }
+
+  // Atualiza o progresso do círculo do timer
+  function updateTimerProgress(fraction) {
+    const circumference = 2 * Math.PI * 45;
+    const offset = circumference * fraction;
+    elements.timerProgress.style.strokeDashoffset = offset;
+  }
+
+  // Mostrar conquistas simples
+  function showAchievements() {
+    if (score === 1) {
+      elements.achievements.textContent = "Você começou com o pé direito!";
+    } else if (score === 5) {
+      elements.achievements.textContent = "Cinco seguidas! Excelente!";
+    } else if (score === 10) {
+      elements.achievements.textContent = "Dez corretas! Você está voando!";
+    } else if (score === 15) {
+      elements.achievements.textContent = "Quinze certas! Impressionante!";
+    } else if (score === perguntas.length && currentQuestionIndex === perguntas.length - 1) {
+      elements.achievements.textContent = "Perfeição absoluta!";
+    } else {
+      elements.achievements.textContent = "";
+    }
+  }
+
+  // Mostra badges ao final do jogo
+  function displayBadges() {
+    elements.badges.innerHTML = '';
+
+    if (score === perguntas.length) {
+      const badge = createBadge('🧠 Gênio Total');
+      elements.badges.appendChild(badge);
+    }
+    if (score >= perguntas.length * 0.9) {
+      const badge = createBadge('⭐ Quase Perfeito');
+      elements.badges.appendChild(badge);
+    }
+    if (score >= perguntas.length * 0.7) {
+      const badge = createBadge('🎯 Muito Bom');
+      elements.badges.appendChild(badge);
+    }
+    if (score >= perguntas.length * 0.5) {
+      const badge = createBadge('👍 Bom Desempenho');
+      elements.badges.appendChild(badge);
+    }
+    if (score >= 10) {
+      const badge = createBadge('🔥 Dezena');
+      elements.badges.appendChild(badge);
+    }
+    if (score >= 5) {
+      const badge = createBadge('⚡ Aquecendo');
+      elements.badges.appendChild(badge);
+    }
+    if (score === 0) {
+      const badge = createBadge('🎲 Tente Novamente');
+      elements.badges.appendChild(badge);
+    }
+  }
+
+  // Cria badge estilizada
+  function createBadge(text) {
+    const span = document.createElement('span');
+    span.className = 'badge';
+    span.textContent = text;
+    return span;
+  }
+
+  // Confetti simples na tela para celebrar
+  function showConfetti() {
+    const confettiCount = 20;
+    for (let i = 0; i < confettiCount; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      confetti.style.left = `${Math.random() * 100}%`;
+      confetti.style.top = `${Math.random() * 20}px`;
+      confetti.style.animationDuration = `${1 + Math.random()}s`;
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 1200);
+    }
+  }
+
+  // Salva resultado no ranking (em memória)
+  function saveRanking() {
+    if (!gameData.ranking) gameData.ranking = [];
+    
+    gameData.ranking.push({
+      name: elements.playerNameInput.value,
+      avatar: elements.avatarSelect.value,
+      score,
+      date: Date.now()
+    });
+    
+    gameData.ranking.sort((a, b) => b.score - a.score || a.date - b.date);
+    gameData.ranking = gameData.ranking.slice(0, 10);
+  }
+
+  // Mostra ranking salvo
+  function showRanking() {
+    const ranking = gameData.ranking || [];
+    elements.rankingList.innerHTML = '';
+    
+    if (ranking.length === 0) {
+      const li = document.createElement('li');
+      li.textContent = 'Nenhum resultado ainda...';
+      elements.rankingList.appendChild(li);
+      return;
+    }
+    
+    ranking.forEach(({name, avatar, score}) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<img src="${avatar}" alt="Avatar de ${name}" /> ${name}: ${score} pts`;
+      elements.rankingList.appendChild(li);
+    });
+  }
+
+  // Inicialização
+  updateTimerVisibility();
+})();
+</script>
+</body>
+</html>

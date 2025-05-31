@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>BA studios </title>
+  <style>
+    /* ========= 1. RESET e FONTE ========= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      line-height: 1.4;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ========= 2. CABEÇALHO ========= */
+    header {
+      background-color: #1f1f1f;
+      border-bottom: 1px solid #2e2e2e;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 32px;
+      width: 32px;
+    }
+    .logo span {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1e90ff;
+    }
+    .search-bar {
+      flex: 1;
+      max-width: 400px;
+      margin: 10px 20px;
+    }
+    .search-bar input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: none;
+      font-size: 1rem;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav ul li a {
+      font-size: 1rem;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    nav ul li a:hover {
+      background-color: #2e2e2e;
+    }
+
+    /* ========= 3. CONTAINER E GALERIA ========= */
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .card-jogo {
+      background-color: #1f1f1f;
+      border: 1px solid #2e2e2e;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-jogo:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    .card-jogo img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    .card-jogo .info {
+      padding: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-jogo .info h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+    .card-jogo .info p {
+      font-size: 0.85rem;
+      color: #aaaaaa;
+    }
+
+    /* ========= 4. IFRAME DE EXIBIÇÃO ========= */
+    .area-jogo {
+      margin-top: 30px;
+      text-align: center;
+      display: none; /* invisível até clicar em um jogo */
+    }
+    .area-jogo h2 {
+      font-size: 1.5rem;
+      color: #1e90ff;
+      margin-bottom: 10px;
+    }
+    .area-jogo iframe {
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    /* ========= 5. FOOTER ========= */
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #1f1f1f;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #777;
+    }
+    footer a {
+      color: #1e90ff;
+    }
+
+    /* ========= 6. RESPONSIVIDADE ========= */
+    @media (max-width: 768px) {
+      .card-jogo img {
+        height: 100px;
+      }
+      .area-jogo iframe {
+        height: 400px;
+      }
+    }
+    @media (max-width: 480px) {
+      .search-bar {
+        flex-basis: 100%;
+        margin: 10px 0;
+      }
+      nav ul {
+        flex-basis: 100%;
+        justify-content: center;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== CABEÇALHO ========== -->
+  <header>
+    <div class="logo">
+      <span>BA Studios</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar jogos..." />
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#">Destaques</a></li>
+        <li><a href="#">Novos</a></li>
+        <li><a href="#">Mais Jogados</a></li>
+        <li><a href="#">Categorias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+  <div class="container">
+    <h1 style="margin-bottom: 20px; color: #ffffff;">Galeria de Jogos</h1>
+    <div class="galeria"></div> <!-- cards gerados via JS -->
+
+    <div class="area-jogo" id="area-jogo">
+      <h2 id="nome-jogo"></h2>
+      <iframe id="jogo-frame" src="" scrolling="none"></iframe>
+    </div>
+  </div>
+
+  <!-- ========== RODAPÉ ========== -->
+  <footer>
+    © 2025 BA Studios. Todos os direitos reservados. |
+    <a href="#">Política de Privacidade</a> |
+    <a href="#">Termos de Uso</a>
+  </footer>
+
+  <!-- ========== SCRIPT DE CARREGAMENTO ========== -->
+  <script>
+    const jogos = [
+      {
+        url: 'jogos/jogo1/index.html',
+        nome: 'Teste de Inteligência',
+        thumb: 'thumbs/jogo-de-inteligencia.jpg',
+        descricao: 'Jogo de raciocínio rápido'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/q0mrnyr9ucvgdqgooq9cq0y7fntuwzjj/',
+        nome: 'Piano Master',
+        thumb: 'thumbs/piano master.jpg',
+        descricao: 'Toque as teclas no momento certo e divirta-se com as músicas.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/b3wf02pl29r9phmtmpya454sr6dw1hyp/',
+        nome: 'CargoTruck Simulator 2025',
+        thumb: 'thumbs/cargotruck.jpg',
+        descricao: 'Dirija um caminhão poderoso por estradas desafiadoras.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/ms6hpyknf5j9xmghxznncws9b8eee2n0/',
+        nome: 'GTA Mercenary Driver',
+        thumb: 'thumbs/gta.jpg',
+        descricao: 'GTA style game is here, driving cars, stealing cars, collect money, kill pedestrians is the best game mode for this awesome driving game RCK GTA Mercenary Driver, you have 100 unique levels to fun.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/u1ds0dmk5bjnu0lis4rk4amsuhf5189w/',
+        nome: 'Chain Cube 2048 3d',
+        thumb: 'thumbs/chain cube.jpg',
+        descricao: 'Have you ever played 2048? This is the 3D cube version of 2048. All you have to do is shoot out the number blocks and merge as many as 2048 to win the game!.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/jzc1121aizqha1ukkc8flbx1dqsql9su/',
+        nome: 'minecraft:imposter war',
+        thumb: 'thumbs/minecraft.jpg',
+        descricao: 'Minicraft: Imposter War is a 2D pixel-art 2-player zombie game.'
+      },
+      {
+        url: 'hhttps://html5.gamemonetize.co/k0hpranmml1ho1cuubj7672ftwqyool9/',
+        nome: 'sport bike driver',
+        thumb: 'thumbs/sportbike.jpg',
+        descricao: 'Sportbike Drive is the super fun simulator game where your driving skills.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/luye5rleios737wp2o9wjq7h577gl937/',
+        nome: 'Among Us Online Edition',
+        thumb: 'thumbs/among.jpg',
+        descricao: 'Welcome to game Among Us Online Edition - game based on Among Us.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/5rn49bwgdwelc4zr2zvj4xtle2n4ecnj/',
+        nome: 'Flappy Bird',
+        thumb: 'thumbs/flAPPY.jpg',
+        descricao: 'Play flappy bird .io here online for free. Click on the screen, to get started..'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/pooszvaulpq40v81v8z3cfdpzau4hro6/',
+        nome: 'Super Mario Run',
+        thumb: 'thumbs/superMario.jpg',
+        descricao: 'Corra com Mario e amigos e ajude a resgatar a princesa.'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/6lgoicny88xkp39f0wv4k3t82dsxv3rq/',
+        nome: 'FullSpeed Racing',
+        thumb: 'thumbs/racing.jpg',
+        descricao: 'Speed Car Racer in Traffic is a racing game with great graphics and realistic driving feel.'
+      }
+    ];
+
+    const galeria = document.querySelector('.galeria');
+
+    jogos.forEach(jogo => {
+      const card = document.createElement('div');
+      card.className = 'card-jogo';
+      card.onclick = () => carregarJogo(jogo.url, jogo.nome);
+      card.innerHTML = `
+        <img src="${jogo.thumb}" alt="${jogo.nome}" />
+        <div class="info">
+          <h3>${jogo.nome}</h3>
+          <p>${jogo.descricao}</p>
+        </div>
+      `;
+      galeria.appendChild(card);
+    });
+
+    function carregarJogo(url, nome) {
+      const areaJogo = document.getElementById('area-jogo');
+      const iframe = document.getElementById('jogo-frame');
+      const titulo = document.getElementById('nome-jogo');
+      
+      iframe.src = url;
+      titulo.textContent = nome;
+      areaJogo.style.display = 'block';
+
+      // Scroll suave até a área do jogo
+      areaJogo.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
