@@ -7,7 +7,7 @@
   <meta name="description" content="Descubra os melhores jogos online grátis no BA Studios! Jogue clássicos e novidades direto no seu navegador, sem downloads." />
   <!-- resto do head -->
 </head>
-
+<link rel="icon" href="studios.png" type="image/png">
 
   <style>
     /* ========= 1. RESET e FONTE ========= */
@@ -201,9 +201,22 @@
   </style>
   <script type='text/javascript' src='//pl26802328.profitableratecpm.com/cd/fa/87/cdfa87062bbd5a2d58ebf7e98ebd79aa.js'></script>
   <script type='text/javascript' src='//pl26802006.profitableratecpm.com/59/55/51/595551017d449acb5002adea1c61e33b.js'></script>
+<!-- Modal de Login/Signup -->
+<div id="login-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;">
+  <div style="background: #1f1f1f; padding: 20px; border-radius: 8px; width: 300px; text-align: center;">
+    <h2 id="modal-title">Entrar</h2>
+    <input type="text" id="username-input" placeholder="Usuário" style="width: 100%; padding: 8px; margin: 10px 0;" />
+    <input type="password" id="password-input" placeholder="Senha" style="width: 100%; padding: 8px; margin-bottom: 10px;" />
+    
+    <div id="error-msg" style="color: red; font-size: 0.9rem; height: 18px;"></div>
+    
+    <button onclick="fazerLogin()" style="padding: 8px 20px;" id="login-btn-modal">Entrar</button>
+    <button onclick="fazerSignup()" style="padding: 8px 20px; margin-left: 10px;" id="signup-btn-modal">Cadastrar</button>
+  </div>
+</div>
+
 </head>
 <body>
-
   <!-- ========== CABEÇALHO ========== -->
   <header>
     <div class="logo">
@@ -211,15 +224,15 @@
     </div>
     <div class="search-bar">
       <input type="text" placeholder="Pesquisar jogos..." />
+  </div>
+      <!-- Header com login e exibição do usuário -->
+<div style="display: flex; justify-content: space-between; align-items: center; background: #111; color: white; padding: 10px 20px;">
+  <div>
+    <button id="login-btn" onclick="abrirLogin()" style="padding: 6px 12px;">Entrar / Cadastrar</button>
+    <span id="username-display" style="margin-left: 10px;"></span>
+  </div>
     </div>
-    <nav>
-      <ul>
-        <li><a href="#">Destaques</a></li>
-        <li><a href="#">Novos</a></li>
-        <li><a href="#">Mais Jogados</a></li>
-        <li><a href="#">Categorias</a></li>
-      </ul>
-    </nav>
+
   </header>
 
   <!-- ========== CONTEÚDO PRINCIPAL ========== -->
@@ -228,9 +241,13 @@
     <div class="galeria"></div> <!-- cards gerados via JS -->
 
     <div class="area-jogo" id="area-jogo">
-      <h2 id="nome-jogo"></h2>
-      <iframe id="jogo-frame" src="" scrolling="none"></iframe>
-    </div>
+  <h2 id="nome-jogo"></h2>
+  <button onclick="entrarFullscreen()" style="margin: 10px; padding: 10px 20px; font-size: 1rem; cursor: pointer;">
+    Tela cheia 🔳
+  </button>
+  <iframe id="jogo-frame" src="" scrolling="none"></iframe>
+</div>
+
   </div>
   <div class="banner-lateral">
   <script async="async" data-cfasync="false" src="//pl26802103.profitableratecpm.com/c17bff41e4d82e72fbfea8ba2f772446/invoke.js"></script>
@@ -323,7 +340,69 @@
         nome: 'Super Buddy Archer',
         thumb: 'thumbs/buddy.jpg',
         descricao: 'Mire e atire as flechas para acertar as cordas que prendem os mais pequenos Buddy '
+      },
+      {
+        url: 'https://html5.gamemonetize.co/a3bmdrog6l9466oe54492y1ngxl6e7b2/',
+        nome:'TicTac Toe Play',
+        thumb:'thumbs/tic.jpg',
+        descricao:'Option 1: Short & Catchy (Tagline / Very Short Description) Classic Tic Tac Toe: Reimagined! Play PvP or challenge Easy/Hard AI.'
+      },
+      {
+         url: 'https://html5.gamemonetize.co/ojmu3ak4yrcdv95xsn7hj1eie5wh8pbd/',
+        nome: 'Subway Surfers Tom and Jerry',
+        thumb: 'thumbs/subway.jpg',
+        descricao:'Surfistas de metrô em Hong Kong! Os caras pretendem se separar totalmente nesta metrópole chinesa'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/u3h8dwolvxrk64ubak2speaguqywravz/',
+        nome: 'Pong Retro',
+        thumb: 'thumbs/retro.jpg',
+        descricao:'Step into gaming history with Retro Pong, a digital revival of the classic arcade experience!'
+      },
+      {
+        url: 'https://html5.gamemonetize.co/pi17f968llgbytljvd391tql0csmwmkb/',
+        nome: 'Dot and Dot',
+        thumb: 'thumbs/dot.jpg',
+        descricao:'Dot and Dot is a colorful puzzle game where players connect matching colored dots on a grid.'
+      },
+      {
+        url: 'https://www.crazygames.com/embed/miniblox',
+        nome: 'BloxCraft',
+        thumb: 'thumbs/blox.jpg',
+        descricao: 'Aventura-te nos mundos do bloxCraft'
+      },
+      {
+        url: 'https://www.crazygames.com/embed/fortzone-battle-royale-xkd',
+        nome: 'FortZone-Battle_royale',
+        thumb: 'thumbs/fort.jpg',
+        descricao:''
+      },
+      {
+        url:'https://www.crazygames.com/embed/shellshockersio',
+        nome:'Shell Shockers',
+        thumb:'thumbs/shell.jpg',
+        descricao: ''
+      },
+      {
+        url:'https://www.crazygames.com/embed/buildnow-gg',
+        nome: 'Buildnow-gg',
+        thumb:'thumbs/build.jpg',
+        descricao:''
+      },
+      {
+        url:'https://www.crazygames.com/embed/rally-racer-dirt',
+        nome:'rally-racer',
+        thumb:'thumbs/rally.jpg',
+        descricao:''
+      },
+      {
+        url:'https://www.crazygames.com/embed/skillwarz',
+        nome:'skillwarz',
+        thumb:'thumbs/skill.jpg',
+        descricao:''
       }
+    
+      
     ];
 
     const galeria = document.querySelector('.galeria');
@@ -354,6 +433,88 @@
       // Scroll suave até a área do jogo
       areaJogo.scrollIntoView({ behavior: 'smooth' });
     }
+    function entrarFullscreen() {
+  const iframe = document.getElementById("jogo-frame");
+  if (iframe.requestFullscreen) {
+    iframe.requestFullscreen();
+  } else if (iframe.webkitRequestFullscreen) {
+    iframe.webkitRequestFullscreen(); // Safari
+  } else if (iframe.msRequestFullscreen) {
+    iframe.msRequestFullscreen(); // IE11
+  }
+}
+function abrirLogin() {
+  document.getElementById('login-modal').style.display = 'flex';
+}
+
+function fecharLogin() {
+  document.getElementById('login-modal').style.display = 'none';
+}
+
+function fazerLogin() {
+  const user = document.getElementById('username-input').value.trim();
+  const pass = document.getElementById('password-input').value;
+
+  const userData = JSON.parse(localStorage.getItem('usuarios') || '{}');
+
+  if (userData[user] && userData[user] === pass) {
+    localStorage.setItem('usuarioLogado', user);
+    atualizarUsuario();
+    fecharLogin();
+  } else {
+    mostrarErro('Usuário ou senha inválidos');
+  }
+}
+
+function fazerSignup() {
+  const user = document.getElementById('username-input').value.trim();
+  const pass = document.getElementById('password-input').value;
+
+  if (!user || !pass) {
+    mostrarErro('Preencha todos os campos');
+    return;
+  }
+
+  let userData = JSON.parse(localStorage.getItem('usuarios') || '{}');
+
+  if (userData[user]) {
+    mostrarErro('Usuário já existe');
+    return;
+  }
+
+  userData[user] = pass;
+  localStorage.setItem('usuarios', JSON.stringify(userData));
+  localStorage.setItem('usuarioLogado', user);
+
+  atualizarUsuario();
+  fecharLogin();
+}
+
+function mostrarErro(msg) {
+  document.getElementById('error-msg').textContent = msg;
+}
+
+function atualizarUsuario() {
+  const username = localStorage.getItem('usuarioLogado');
+  const display = document.getElementById('username-display');
+  const loginBtn = document.getElementById('login-btn');
+
+  if (username) {
+    display.innerHTML = `👋 Olá, ${username} <button onclick="logout()">Sair</button>`;
+    loginBtn.style.display = 'none';
+  } else {
+    display.innerHTML = '';
+    loginBtn.style.display = 'inline-block';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('usuarioLogado');
+  atualizarUsuario();
+}
+
+document.addEventListener('DOMContentLoaded', atualizarUsuario);
+
   </script>
 </body>
 </html>
